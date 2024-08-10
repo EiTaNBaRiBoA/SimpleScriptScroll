@@ -32,10 +32,12 @@ var _plugin : EditorPlugin = null
 @onready var _reset_style_button: Button = %ResetStyleButton
 @onready var _reset_margin_up_button: Button = %ResetMarginUpButton
 @onready var _reset_margin_down_button: Button = %ResetMarginDownButton
+@onready var _rich_text_label: RichTextLabel = %RichTextLabel
 
 
 func set_plugin(plugin : EditorPlugin) -> void:
 	_plugin = plugin
+	_rich_text_label.text = _rich_text_label.text.format({"version_plugin":_plugin.get_plugin_version()})
 	_style_button.clear()
 	_style_button.add_item("None", _plugin.SCROLL_NONE)
 	_style_button.add_item("Margin Lines", _plugin.SCROLL_MARGIN_LINES)
@@ -103,3 +105,7 @@ func _on_about_rich_text_meta_clicked(meta: Variant) -> void:
 func _on_close_requested() -> void:
 	_plugin.save_config()
 	queue_free()
+
+
+func _on_confirmed() -> void:
+	_on_close_requested()
