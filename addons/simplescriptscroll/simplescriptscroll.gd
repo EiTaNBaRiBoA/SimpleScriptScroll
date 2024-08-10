@@ -41,7 +41,7 @@ var scroll_margin_lines_down := DEFAULT_SCROLL_MARGIN_LINES_DOWN
 var keyvim_style_enabled := true
 
 var _time_pressed_keyvim := 0
-var _mouse_button_time := 0 # workaround para la versión beta1 de 4.3, que al hacer click hace selección
+var _mouse_button_time := 0 # workaround para Godot 4.3, que al hacer click hace selección
 var _prev_line := 0
 
 
@@ -73,7 +73,10 @@ func save_config() -> void:
 	config.set_value("scroll", "margin_lines_up", scroll_margin_lines_up)
 	config.set_value("scroll", "margin_lines_down", scroll_margin_lines_down)
 	config.set_value("scroll", "keyvim_style_enabled", keyvim_style_enabled)
-	config.save(get_editor_interface().get_editor_paths().get_config_dir().path_join("simplescriptscroll.cfg"))
+	var filepath := get_editor_interface().get_editor_paths().get_config_dir().path_join("simplescriptscroll.cfg")
+	var err := config.save(filepath)
+	if err != OK:
+		push_warning("SimpleScriptScroll: error saving config (", error_string(err), ") on file: ", filepath)
 
 
 func tool_script_scroll_set_enable(enable : bool) -> void:

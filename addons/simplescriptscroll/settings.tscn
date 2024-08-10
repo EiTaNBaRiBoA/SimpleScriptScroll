@@ -11,7 +11,7 @@ content_margin_top = 20.0
 [node name="Settings" type="AcceptDialog"]
 title = "Simple Script Scroll Settings"
 initial_position = 2
-size = Vector2i(341, 394)
+size = Vector2i(341, 403)
 visible = true
 script = ExtResource("1_ehvcg")
 
@@ -44,14 +44,14 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Settings/VBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_6sh3p")
 bbcode_enabled = true
 text = "[center][font_size=18]SimpleScriptScroll[/font_size]
-[font_size=10]v. 1.0.2[/font_size]
-[font_size=14]by IcterusGames[/font_size][/center]
-"
+[font_size=10]v. {version_plugin}[/font_size]
+[font_size=14]by IcterusGames[/font_size][/center]"
 fit_content = true
 
 [node name="GridContainer" type="GridContainer" parent="Settings/VBoxContainer"]
@@ -142,6 +142,7 @@ text = "[font_size=12][b]Support me on:[/b][/font_size]
 fit_content = true
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="confirmed" from="." to="." method="_on_confirmed"]
 [connection signal="pressed" from="Settings/VBoxContainer/GridContainer/HBoxContainer/ResetStyleButton" to="." method="_on_reset_style_button_pressed"]
 [connection signal="item_selected" from="Settings/VBoxContainer/GridContainer/StyleButton" to="." method="_on_style_button_item_selected"]
 [connection signal="pressed" from="Settings/VBoxContainer/GridContainer/HBoxContainer2/ResetMarginUpButton" to="." method="_on_reset_margin_up_button_pressed"]
