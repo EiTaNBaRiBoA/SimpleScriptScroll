@@ -47,14 +47,12 @@ var _prev_line := 0
 
 func _enter_tree() -> void:
 	load_config()
-	if scroll_type != SCROLL_NONE:
-		tool_script_scroll_set_enable(true)
+	tool_script_scroll_set_enable(true)
 	add_tool_menu_item("Simple Script Scroll Settings", _on_tool_menu_item_pressed)
 
 
 func _exit_tree() -> void:
-	if scroll_type != SCROLL_NONE:
-		tool_script_scroll_set_enable(false)
+	tool_script_scroll_set_enable(false)
 	remove_tool_menu_item("Simple Script Scroll Settings")
 
 
@@ -98,6 +96,9 @@ func tool_script_scroll_set_enable(enable : bool) -> void:
 				codeedit.caret_changed.disconnect(_on_codeedit_caret_changed)
 			if codeedit.gui_input.is_connected(_on_codeedit_input):
 				codeedit.gui_input.disconnect(_on_codeedit_input)
+			var vscroll: VScrollBar = codeedit.get_v_scroll_bar()
+			if vscroll.value_changed.is_connected(_on_codeedit_scroll_changed):
+				vscroll.value_changed.disconnect(_on_codeedit_scroll_changed)
 
 
 func _on_editor_script_changed(_script : Script) -> void:
@@ -113,10 +114,20 @@ func _on_editor_script_changed(_script : Script) -> void:
 	if keyvim_style_enabled or Engine.get_version_info().hex >= 0x040300: # Verificación de versión por el _mouse_button_time
 		if not codeedit.gui_input.is_connected(_on_codeedit_input):
 			codeedit.gui_input.connect(_on_codeedit_input.bind(codeedit))
+	var vscroll: VScrollBar = codeedit.get_v_scroll_bar()
+	if not vscroll.value_changed.is_connected(_on_codeedit_scroll_changed):
+		vscroll.value_changed.connect(_on_codeedit_scroll_changed.bind(codeedit, vscroll))
 	var end : int = codeedit.get_line_count()
 	var page : int = codeedit.get_v_scroll_bar().page
 	if end > page and page > 1:
 		codeedit.scroll_past_end_of_file = true
+
+
+func _on_codeedit_scroll_changed(value: float, codeedit: CodeEdit, vscroll: VScrollBar) -> void:
+	var page : int = codeedit.get_v_scroll_bar().page
+	var end : int = codeedit.get_line_count()
+	if value > (end - page / 2) - 1:
+		vscroll.value = (end - page / 2) - 1
 
 
 func _on_codeedit_input(event : InputEvent, codeedit : CodeEdit) -> void:
